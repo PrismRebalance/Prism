@@ -1,0 +1,39 @@
+<svg width="720" height="320" viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" font-family="'Inter','Segoe UI','Arial',sans-serif">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#07080f"/>
+      <stop offset="100%" stop-color="#0a0c15"/>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="320" fill="url(#bg2)"/>
+
+  <text x="360" y="30" fill="#475569" font-size="11" text-anchor="middle" letter-spacing="3">PRISM · REBALANCE PLAN</text>
+
+  <!-- Trade card 1 -->
+  <rect x="36" y="48" width="300" height="112" rx="12" fill="#0e0a1f" stroke="#4338ca" stroke-width="1.5"/>
+  <rect x="36" y="48" width="300" height="5" rx="3" fill="#6366f1"/>
+  <text x="56" y="76" fill="#94a3b8" font-size="10" font-weight="600" letter-spacing="1">TRADE #1 · PRIORITY HIGH</text>
+  <text x="56" y="100" fill="#f1f5f9" font-size="18" font-weight="700">SOL  →  JUP</text>
+  <text x="56" y="120" fill="#4ade80" font-size="15" font-weight="700">$620</text>
+  <text x="110" y="120" fill="#475569" font-size="12">sell SOL, buy JUP</text>
+  <text x="56" y="144" fill="#475569" font-size="11">SOL overweight +4.2% · JUP underweight −3.8%</text>
+
+  <!-- Trade card 2 -->
+  <rect x="384" y="48" width="300" height="112" rx="12" fill="#0a1a0e" stroke="#166534" stroke-width="1.5"/>
+  <rect x="384" y="48" width="300" height="5" rx="3" fill="#4ade80"/>
+  <text x="404" y="76" fill="#94a3b8" font-size="10" font-weight="600" letter-spacing="1">TRADE #2 · PRIORITY MEDIUM</text>
+  <text x="404" y="100" fill="#f1f5f9" font-size="18" font-weight="700">SOL  →  WIF</text>
+  <text x="404" y="120" fill="#4ade80" font-size="15" font-weight="700">$220</text>
+  <text x="458" y="120" fill="#475569" font-size="12">sell SOL, buy WIF</text>
+  <text x="404" y="144" fill="#475569" font-size="11">SOL still overweight · WIF underweight −2.1%</text>
+
+  <!-- before / after comparison -->
+  <rect x="36" y="180" width="648" height="80" rx="10" fill="#0a0c15" stroke="#1e293b" stroke-width="1"/>
+  <text x="60" y="202" fill="#475569" font-size="10" font-weight="600" letter-spacing="2">BEFORE</text>
+  <text x="60" y="222" fill="#94a3b8" font-size="12">SOL 42% · JUP 11% · JTO 16% · BONK 9% · WIF 8% · USDC 14%</text>
+  <rect x="60" y="236" width="600" height="1" fill="#1e293b"/>
+  <text x="60" y="252" fill="#475569" font-size="10" font-weight="600" letter-spacing="2">AFTER</text>
+  <text x="60" y="270" fill="#e2e8f0" font-size="12">SOL 40% · JUP 15% · JTO 16% · BONK 9% · WIF 10% · USDC 10%</text>
+
+  <text x="360" y="308" fill="#0f172a" font-size="10" text-anchor="middle">prism · dry run mode · 2 trades · $840 total · jupiter swaps · built with claude agent sdk</text>
+</svg>
