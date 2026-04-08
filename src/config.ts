@@ -9,7 +9,10 @@ const schema = z.object({
   CLAUDE_MODEL: z.string().default("claude-sonnet-4-6"),
   REBALANCE_THRESHOLD_PCT: z.coerce.number().default(5),
   MIN_TRADE_USD: z.coerce.number().default(50),
+  MAX_PRICE_IMPACT_PCT: z.coerce.number().default(1.5),
+  MIN_SOL_RESERVE: z.coerce.number().default(0.1),
   DRY_RUN: z.string().default("true"),
+  WALLET_PRIVATE_KEY: z.string().optional(),
   CHECK_INTERVAL_MS: z.coerce.number().default(3_600_000),
 });
 

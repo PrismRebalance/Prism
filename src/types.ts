@@ -37,6 +37,10 @@ export interface RebalanceOrder {
   fromMint: string;
   toMint: string;
   amountUsd: number;
+  estimatedOutputUsd: number;
+  priceImpactPct: number;
+  executable: boolean;
+  skipReason?: string;
   rationale: string;
   priority: number;
   generatedAt: number;

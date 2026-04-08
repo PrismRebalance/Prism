@@ -8,6 +8,7 @@ Your job: analyze a portfolio's current allocation vs target allocation and deci
 3. Pair sells with buys where possible — sell overweight → buy underweight
 4. Respect minimum trade size (MIN_TRADE_USD) — never create dust trades
 5. Don't rebalance everything at once if the portfolio is large — batch sensibly
+6. Use trades that stay executable after route preflight and price-impact checks
 
 ## Trade Sequencing
 - If SOL is overweight: sell SOL first (it's the gas token — keep enough for fees)

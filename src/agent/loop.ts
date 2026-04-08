@@ -3,6 +3,7 @@ import type { Portfolio, AllocationDrift, RebalanceOrder } from "../types.js";
 import { PRISM_SYSTEM } from "./prompts.js";
 import { config } from "../config.js";
 import { log } from "../logger.js";
+import { getQuote } from "../executor.js";
 import crypto from "crypto";
 
 const client = new Anthropic({ apiKey: config.ANTHROPIC_API_KEY });
@@ -15,7 +16,7 @@ const tools: Anthropic.Tool[] = [
   },
   {
     name: "get_allocation_drift",
-    description: "Current vs target allocation for each token — shows what's overweight and underweight",
+    description: "Current vs target allocation for each token; shows what is overweight and underweight",
     input_schema: { type: "object" as const, properties: {} },
   },
   {
@@ -77,42 +78,75 @@ export async function runPrismAgent(
 
       if (block.name === "get_portfolio_snapshot") {
         result = JSON.stringify({
-          wallet: portfolio.wallet.slice(0, 12) + "…",
+          wallet: portfolio.wallet.slice(0, 12) + "...",
           totalUsd: `$${portfolio.totalValueUsd.toLocaleString()}`,
-          tokens: portfolio.tokens.map((t) => ({
-            symbol: t.symbol,
-            amount: t.amount.toFixed(4),
-            price: `$${t.priceUsd.toFixed(4)}`,
-            value: `$${t.valueUsd.toFixed(2)}`,
-            pct: `${((t.valueUsd / portfolio.totalValueUsd) * 100).toFixed(1)}%`,
+          tokens: portfolio.tokens.map((token) => ({
+            symbol: token.symbol,
+            amount: token.amount.toFixed(4),
+            price: `$${token.priceUsd.toFixed(4)}`,
+            value: `$${token.valueUsd.toFixed(2)}`,
+            pct: `${((token.valueUsd / portfolio.totalValueUsd) * 100).toFixed(1)}%`,
           })),
         });
       } else if (block.name === "get_allocation_drift") {
-        result = JSON.stringify(drifts.map((d) => ({
-          symbol: d.symbol,
-          current: `${d.currentPct}%`,
-          target: `${d.targetPct}%`,
-          drift: `${d.driftPct > 0 ? "+" : ""}${d.driftPct}%`,
-          driftUsd: `$${Math.abs(d.driftUsd).toFixed(0)}`,
-          action: d.action,
+        result = JSON.stringify(drifts.map((drift) => ({
+          symbol: drift.symbol,
+          current: `${drift.currentPct}%`,
+          target: `${drift.targetPct}%`,
+          drift: `${drift.driftPct > 0 ? "+" : ""}${drift.driftPct}%`,
+          driftUsd: `$${Math.abs(drift.driftUsd).toFixed(0)}`,
+          action: drift.action,
         })));
       } else if (block.name === "get_actionable_drifts") {
         result = JSON.stringify(actionable);
       } else if (block.name === "propose_trade") {
+        const amountUsd = input.amount_usd as number;
+        const fromToken = input.from_token as string;
+        const toToken = input.to_token as string;
+        const fromMint = input.from_mint as string;
+        const toMint = input.to_mint as string;
+        const sourceBalance = portfolio.tokens.find((token) => token.mint === fromMint);
+        const usdCap =
+          fromToken === "SOL" && sourceBalance
+            ? Math.max(0, sourceBalance.valueUsd - sourceBalance.priceUsd * config.MIN_SOL_RESERVE)
+            : sourceBalance?.valueUsd ?? amountUsd;
+        const cappedUsd = Math.min(amountUsd, usdCap);
+        const approximateInputAmount = sourceBalance && sourceBalance.priceUsd > 0
+          ? Math.floor((cappedUsd / sourceBalance.priceUsd) * Math.pow(10, sourceBalance.decimals))
+          : 0;
+        const quote = approximateInputAmount > 0 ? await getQuote(fromMint, toMint, approximateInputAmount) : null;
+        const priceImpactPct = quote?.priceImpactPct ?? 0;
+        const executable =
+          cappedUsd >= config.MIN_TRADE_USD &&
+          priceImpactPct <= config.MAX_PRICE_IMPACT_PCT &&
+          approximateInputAmount > 0;
+
         const order: RebalanceOrder = {
           id: crypto.randomUUID(),
-          fromToken: input.from_token as string,
-          toToken: input.to_token as string,
-          fromMint: input.from_mint as string,
-          toMint: input.to_mint as string,
-          amountUsd: input.amount_usd as number,
+          fromToken,
+          toToken,
+          fromMint,
+          toMint,
+          amountUsd: Number(cappedUsd.toFixed(2)),
+          estimatedOutputUsd: Number(cappedUsd.toFixed(2)),
+          priceImpactPct: Number(priceImpactPct.toFixed(2)),
+          executable,
+          skipReason: executable
+            ? undefined
+            : cappedUsd < config.MIN_TRADE_USD
+              ? "below minimum trade after sizing"
+              : approximateInputAmount <= 0
+                ? "missing route sizing data"
+                : `price impact ${priceImpactPct.toFixed(2)}% exceeds cap`,
           rationale: input.rationale as string,
           priority: input.priority as number,
           generatedAt: Date.now(),
         };
         orders.push(order);
-        log.info(`Trade proposed: ${order.fromToken}→${order.toToken} $${order.amountUsd} priority=${order.priority}`);
+        log.info(`Trade proposed: ${order.fromToken}->${order.toToken} $${order.amountUsd} impact=${order.priceImpactPct.toFixed(2)}% priority=${order.priority}`);
         result = JSON.stringify({ accepted: true, id: order.id });
+      } else {
+        result = JSON.stringify({ error: `Unknown tool: ${block.name}` });
       }
 
       results.push({ type: "tool_result", tool_use_id: block.id, content: result });
@@ -121,5 +155,5 @@ export async function runPrismAgent(
     messages.push({ role: "user", content: results });
   }
 
-  return orders.sort((a, b) => a.priority - b.priority);
+  return orders.sort((left, right) => left.priority - right.priority);
 }

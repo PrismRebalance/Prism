@@ -5,7 +5,7 @@
 **Portfolio rebalancer for Solana.**
 Set your target allocation. Prism watches your wallet, detects drift, and proposes (or executes) the exact trades to restore balance.
 
-[![Build](https://img.shields.io/github/actions/workflow/status/PrismRebalance/Prism/ci.yml?branch=main&style=flat-square&label=Build)](https://github.com/PrismRebalance/Prism/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/PrismRebalance/Prism/ci.yml?branch=master&style=flat-square&label=Build)](https://github.com/PrismRebalance/Prism/actions)
 ![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 [![Built with Claude Agent SDK](https://img.shields.io/badge/Built%20with-Claude%20Agent%20SDK-6366f1?style=flat-square)](https://docs.anthropic.com/en/docs/agents-and-tools/claude-agent-sdk)
 

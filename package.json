@@ -2,6 +2,15 @@
   "name": "prism",
   "version": "0.1.0",
   "description": "Portfolio rebalancer for Solana — monitors allocation drift and proposes or executes rebalance trades via Jupiter",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrismRebalance/Prism.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PrismRebalance/Prism/issues"
+  },
+  "homepage": "https://github.com/PrismRebalance/Prism#readme",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
