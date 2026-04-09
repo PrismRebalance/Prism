@@ -1,8 +1,16 @@
 {
   "name": "prism",
   "version": "0.1.0",
-  "description": "Portfolio rebalancer for Solana — monitors allocation drift and proposes or executes rebalance trades via Jupiter",
+  "description": "Drift-aware Solana rebalancer that only promotes trades which survive quote quality and reserve checks.",
   "license": "MIT",
+  "packageManager": "bun@1.2.15",
+  "keywords": [
+    "solana",
+    "portfolio",
+    "rebalancing",
+    "jupiter",
+    "allocator"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PrismRebalance/Prism.git"
@@ -31,5 +39,8 @@
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   },
-  "engines": { "node": ">=20.0.0", "bun": ">=1.2.0" }
+  "engines": {
+    "node": ">=20.0.0",
+    "bun": ">=1.2.0"
+  }
 }
