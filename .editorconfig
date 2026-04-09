@@ -10,3 +10,9 @@ trim_trailing_whitespace = true
 
 [*.md]
 trim_trailing_whitespace = false
+
+[*.svg]
+indent_size = 2
+
+[*.yml]
+indent_size = 2
