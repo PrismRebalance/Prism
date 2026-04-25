@@ -21,15 +21,7 @@ Prism is built for that decision. It treats rebalancing like an execution proble
 
 ---
 
-Portfolio Dashboard • Rebalance Plan • Why Prism Exists • Portfolio Policy • At a Glance • Decision Stack • What A Rebalance Must Prove • Example Output • Default Sleeve Design • Risk Controls • Quick Start
-
-## Portfolio Dashboard
-
-![Prism Allocation](assets/preview-allocation.svg)
-
-## Rebalance Plan
-
-![Prism Rebalance](assets/preview-rebalance.svg)
+Why Prism Exists • Portfolio Policy • At a Glance • Decision Stack • What A Rebalance Must Prove • Example Output • Default Sleeve Design • Risk Controls • Quick Start
 
 ## Why Prism Exists
 
