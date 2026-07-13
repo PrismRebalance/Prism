@@ -2,7 +2,7 @@
 
 # Prism
 
-**Drift-aware portfolio rebalancer for Solana wallets.**
+**Drift-aware portfolio rebalancer for Robinhood wallets.**
 Prism tracks allocation drift, prices the cost of correcting it, and produces a rebalance plan that is meant to be executable, not just mathematically tidy.
 
 [![Build](https://img.shields.io/github/actions/workflow/status/PrismRebalance/Prism/ci.yml?branch=master&style=flat-square&label=Build)](https://github.com/PrismRebalance/Prism/actions)
@@ -46,7 +46,7 @@ That framing makes the product much easier to understand for non-dev readers too
 
 ## At a Glance
 
-- `Use case`: keeping a Solana wallet close to a target allocation without manual spreadsheet work
+- `Use case`: keeping a Robinhood wallet close to a target allocation without manual spreadsheet work
 - `Primary input`: wallet balances, token prices, target percentages, quote quality, and execution friction
 - `Primary failure mode`: generating mathematically correct rebalances that are not actually worth executing
 - `Best for`: operators who want discipline around allocation drift, not just portfolio visibility
@@ -127,7 +127,7 @@ mode                dry-run
 
 | Token | Target | Role in the portfolio |
 |-------|--------|-----------------------|
-| SOL | 40% | core Solana exposure |
+| SOL | 40% | core Robinhood exposure |
 | JUP | 15% | DEX infrastructure |
 | JTO | 15% | liquid staking |
 | BONK | 10% | community beta |

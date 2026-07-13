@@ -1,11 +1,11 @@
 {
   "name": "prism",
   "version": "0.1.0",
-  "description": "Drift-aware Solana rebalancer that only promotes trades which survive quote quality and reserve checks.",
+  "description": "Drift-aware Robinhood rebalancer that only promotes trades which survive quote quality and reserve checks.",
   "license": "MIT",
   "packageManager": "bun@1.2.15",
   "keywords": [
-    "solana",
+    "robinhood",
     "portfolio",
     "rebalancing",
     "jupiter",
