@@ -8,7 +8,7 @@
     "robinhood",
     "portfolio",
     "rebalancing",
-    "jupiter",
+    "crypto",
     "allocator"
   ],
   "repository": {
@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/PrismRebalance/Prism/issues"
   },
-  "homepage": "https://github.com/PrismRebalance/Prism#readme",
+  "homepage": "https://prism-launch.vercel.app/",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {

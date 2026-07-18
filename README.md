@@ -2,7 +2,7 @@
 
 # Prism
 
-**Drift-aware portfolio rebalancer for Robinhood wallets.**
+**Drift-aware portfolio rebalancer for Robinhood accounts.**
 Prism tracks allocation drift, prices the cost of correcting it, and produces a rebalance plan that is meant to be executable, not just mathematically tidy.
 
 [![Build](https://img.shields.io/github/actions/workflow/status/PrismRebalance/Prism/ci.yml?branch=master&style=flat-square&label=Build)](https://github.com/PrismRebalance/Prism/actions)
@@ -13,11 +13,11 @@ Prism tracks allocation drift, prices the cost of correcting it, and produces a 
 
 ---
 
-Most portfolio tools stop at visibility. They show the wallet, maybe the percentages, and then leave the operator alone with the hard question: is the drift big enough to fix, and if so, are the trades still worth doing after slippage, minimum size, and reserve constraints are counted honestly?
+Most portfolio tools stop at visibility. They show the account, maybe the percentages, and then leave the operator alone with the hard question: is the drift big enough to fix, and if so, are the trades still worth doing after spreads, minimum size, transaction fees, and cash reserve constraints are counted honestly?
 
 Prism is built for that decision. It treats rebalancing like an execution problem, not a math exercise.
 
-`LOAD WALLET -> MEASURE DRIFT -> BUILD PLAN -> PREFLIGHT -> EXECUTE OR HOLD`
+`LOAD ACCOUNT -> MEASURE DRIFT -> BUILD PLAN -> PREFLIGHT -> EXECUTE OR HOLD`
 
 ---
 
@@ -25,29 +25,29 @@ Why Prism Exists • Portfolio Policy • At a Glance • Decision Stack • Wha
 
 ## Why Prism Exists
 
-Rebalancing sounds easy when the portfolio is hypothetical. It becomes harder the moment the wallet is real.
+Rebalancing sounds easy when the portfolio is hypothetical. It becomes harder the moment the account is real.
 
-One asset runs too far, another becomes too small, the neat target allocation you wanted now conflicts with price impact, dust thresholds, and the need to keep enough SOL to operate. That is the gap Prism is meant to fill.
+One asset runs too far, another becomes too small, and the target allocation now conflicts with spreads, minimum trade sizes, price impact, and the need to keep enough cash in reserve. That is the gap Prism is meant to fill.
 
 It is not a passive tracker and it is not a blind auto-trader. It is a portfolio policy engine for operators who want a disciplined way to decide whether drift is worth correcting right now.
 
 ## Portfolio Policy, Not Just Portfolio Tracking
 
-The value of Prism is not that it knows the wallet composition. Plenty of tools can show that.
+The value of Prism is not that it knows the account composition. Plenty of tools can show that.
 
 The value is that it asks the right question after composition changes:
 
 - is the portfolio still inside policy
 - if not, which drift matters first
 - what trades would fix it
-- which of those trades still make sense after route quality and reserve safety are checked
+- which of those trades still make sense after execution quality and cash reserve safety are checked
 
-That framing makes the product much easier to understand for non-dev readers too. The job is not "portfolio visualization." The job is "keep the wallet close to plan without paying stupid friction."
+That framing makes the product much easier to understand for non-dev readers too. The job is not "portfolio visualization." The job is "keep the account close to plan without paying stupid friction."
 
 ## At a Glance
 
-- `Use case`: keeping a Robinhood wallet close to a target allocation without manual spreadsheet work
-- `Primary input`: wallet balances, token prices, target percentages, quote quality, and execution friction
+- `Use case`: keeping a Robinhood account close to a target allocation without manual spreadsheet work
+- `Primary input`: account balances, asset prices, target percentages, execution quality, and trading friction
 - `Primary failure mode`: generating mathematically correct rebalances that are not actually worth executing
 - `Best for`: operators who want discipline around allocation drift, not just portfolio visibility
 
@@ -69,7 +69,7 @@ The planner turns that ranked drift into concrete buy and sell legs.
 
 ### 4. Preflight
 
-Every trade is tested against route quality, trade size, and reserve constraints.
+Every trade is tested against execution quality, trade size, price impact, and cash reserve constraints.
 
 ### 5. Final State
 
@@ -81,11 +81,11 @@ That final distinction is why Prism reads like a real allocator instead of a toy
 
 Prism follows a five-part loop:
 
-1. load current wallet balances and price them in USD
+1. load current Robinhood account balances and price them in USD
 2. compare the live portfolio against the configured target allocation
 3. compute drift for every tracked asset and rank the deviations
 4. build rebalance orders that move the portfolio back toward target
-5. preflight the candidate orders for price impact, minimum size, and SOL reserve safety
+5. preflight the candidate orders for execution quality, price impact, minimum size, and cash reserve safety
 
 Only the orders that survive preflight should be treated as real. Everything else is analysis, not permission.
 
@@ -95,8 +95,8 @@ A good Prism plan is not just one that improves the percentages. It has to prove
 
 - the drift is large enough to matter
 - the correction is large enough to justify trading
-- the route quality is good enough to avoid burning edge in execution
-- the wallet will still be operational after the trades clear
+- the execution quality is strong enough to preserve the edge
+- the account keeps its configured cash reserve after the trades clear
 
 This is what makes Prism more appealing for launch than a generic "rebalance bot" description. The pitch is immediately grounded in constraints people already understand.
 
@@ -104,7 +104,7 @@ This is what makes Prism more appealing for launch than a generic "rebalance bot
 
 - promotes a small number of meaningful corrections over many tiny trades
 - protects reserve balance instead of over-optimizing every percentage point
-- demotes routes that look too expensive to justify execution
+- demotes trades whose execution quality is too weak to justify execution
 - leaves a plan in preview when the drift is real but the trade quality is weak
 
 That behavior is important. A rebalancer that is always eager to trade is usually just good at generating fees.
@@ -114,35 +114,35 @@ That behavior is important. A rebalancer that is always eager to trade is usuall
 ```text
 PRISM // REBALANCE PLAN
 
-wallet value        $12,440
-largest drift       SOL +8.2%
-mode                dry-run
+account value       $12,440
+largest drift       BTC +8.2%
+mode                preview
 
-1. sell SOL -> buy USDC   $620   executable
-2. sell BONK -> buy JTO   $180   executable
-3. buy JUP using USDC      $95   skipped: below min trade
+1. sell BTC -> buy USDC    $620   execute
+2. sell XRP -> buy ETH     $180   execute
+3. buy DOGE using USDC      $95   hold: below min trade
 ```
 
 ## Default Sleeve Design
 
-| Token | Target | Role in the portfolio |
+| Asset | Target | Role in the portfolio |
 |-------|--------|-----------------------|
-| SOL | 40% | core Robinhood exposure |
-| JUP | 15% | DEX infrastructure |
-| JTO | 15% | liquid staking |
-| BONK | 10% | community beta |
-| WIF | 10% | meme sleeve |
-| USDC | 10% | reserve and dry powder |
+| BTC | 40% | core allocation |
+| ETH | 15% | large-cap crypto |
+| DOGE | 15% | high-beta sleeve |
+| XRP | 10% | payments sleeve |
+| AVAX | 10% | smart-contract sleeve |
+| USDC | 10% | cash reserve |
 
-Customize the target mix in [`src/targets.ts`](src/targets.ts).
+The target mix is configurable. Prism measures every holding against the chosen weights on each cycle.
 
 ## When Prism Should Hold Fire
 
 There are plenty of cases where the right answer is no trade.
 
 - the drift is real but too small to justify friction
-- the intended correction would leave too little SOL in reserve
-- the route quality is too weak for the size involved
+- the intended correction would breach the cash reserve floor
+- the execution quality is too weak for the size involved
 - the order improves percentages but not enough to matter economically
 
 This is a big part of the product story. People trust allocator tools more when they can see that restraint is part of the design.
@@ -151,42 +151,18 @@ This is a big part of the product story. People trust allocator tools more when 
 
 - `rebalance threshold`: ignores small drift that is not worth paying to correct
 - `minimum trade size`: stops dust-level corrections from cluttering the plan
-- `price impact cap`: marks expensive routes as non-executable
-- `SOL reserve floor`: protects the wallet from rebalancing away too much operating balance
-- `dry-run mode`: lets operators inspect the plan before allowing execution
+- `price impact cap`: marks expensive trades as non-executable
+- `cash reserve floor`: keeps the configured minimum cash balance in the account
+- `preview mode`: lets operators inspect the plan before allowing execution
 
-Prism should be trusted as a disciplined allocator, not as a license to overtrade the wallet every time prices move.
-
-## Quick Start
-
-```bash
-git clone https://github.com/PrismRebalance/Prism
-cd Prism
-bun install
-cp .env.example .env
-bun run dev
-```
-
-## Configuration
-
-```bash
-ANTHROPIC_API_KEY=sk-ant-...
-HELIUS_API_KEY=...
-WALLET_ADDRESS=your-wallet
-REBALANCE_THRESHOLD_PCT=5
-MIN_TRADE_USD=50
-MAX_PRICE_IMPACT_PCT=1.5
-MIN_SOL_RESERVE=0.1
-DRY_RUN=true
-CHECK_INTERVAL_MS=3600000
-```
+Prism should be trusted as a disciplined allocator, not as a license to overtrade the account every time prices move.
 
 ## Support Docs
 
-- [Runbook](docs/runbook.md)
-- [Changelog](CHANGELOG.md)
-- [Contributing](CONTRIBUTING.md)
-- [Security](SECURITY.md)
+- [Live board](https://prism-launch.vercel.app/)
+- [Rebalance filters](docs/rebalance-filters.md)
+- [Prism on X](https://x.com/PrismRobinhood)
+- [$PRISM launch](https://pons.family/)
 
 ## License
 
