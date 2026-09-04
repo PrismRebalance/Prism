@@ -9,7 +9,8 @@
     "portfolio",
     "rebalancing",
     "crypto",
-    "allocator"
+    "allocator",
+    "pons"
   ],
   "repository": {
     "type": "git",
@@ -18,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/PrismRebalance/Prism/issues"
   },
-  "homepage": "https://prism-launch.vercel.app/",
+  "homepage": "https://pons.family/",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {

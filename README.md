@@ -2,8 +2,12 @@
 
 # Prism
 
+<img src="assets/prism-avatar.png" alt="Prism avatar" width="128" />
+
 **Drift-aware portfolio rebalancer for Robinhood accounts.**
 Prism tracks allocation drift, prices the cost of correcting it, and produces a rebalance plan that is meant to be executable, not just mathematically tidy.
+
+[Launch venue](https://pons.family/)
 
 [![Build](https://img.shields.io/github/actions/workflow/status/PrismRebalance/Prism/ci.yml?branch=master&style=flat-square&label=Build)](https://github.com/PrismRebalance/Prism/actions)
 ![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
@@ -159,10 +163,9 @@ Prism should be trusted as a disciplined allocator, not as a license to overtrad
 
 ## Support Docs
 
-- [Live board](https://prism-launch.vercel.app/)
 - [Rebalance filters](docs/rebalance-filters.md)
 - [Prism on X](https://x.com/PrismRobinhood)
-- [$PRISM launch](https://pons.family/)
+- [Launch venue](https://pons.family/)
 
 ## License
 
