@@ -43,8 +43,8 @@ async function check(): Promise<void> {
           await executeOrder(order);
         } catch (e) {
           log.error("Order execution failed", {
-            market: order.market,
-            side: order.side,
+            fromToken: order.fromToken,
+            toToken: order.toToken,
             error: e instanceof Error ? e.message : String(e),
           });
         }
